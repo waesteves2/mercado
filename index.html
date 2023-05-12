@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <title>Lista de Mercado</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .checked {
+      text-decoration: line-through;
+    }
+  </style>
+
+<style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      margin-bottom: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    button {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: none;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      flex: 1;
+      margin-right: 10px;
+    }
+
+    button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #fff;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      max-width: 500px;
+      margin: 10px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .item-name {
+      flex: 1;
+    }
+
+    .item-value {
+      margin-right: 10px;
+    }
+
+    .item-buttons {
+      display: flex;
+    }
+
+    .item-buttons button {
+      padding: 5px;
+      font-size: 14px;
+      margin-left: 5px;
+      background-color: #aaa;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    h2{
+
+        text-align: center;
+    }
+
+    .checked {
+      text-decoration: line-through;
+      background-color: #d9d9d9;
+      color: #4CAF50;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    
+  </style>
+</head>
+<body>
+  <h1>Lista de Mercado</h1>
+
+  <form id="item-form">
+    <input type="text" id="item-input" placeholder="Digite um item">
+      <input type="number" id="item-value" step="0.01" placeholder="Valor">
+    <button type="submit">Adicionar</button>
+  </form>
+
+  <ul id="item-list">
+  </ul>
+
+  <h2>Total: R$<span id="total-value">0</span></h2>
+
+  <script>
+    // Array para armazenar os itens da lista
+    const itemList = [];
+
+    // Função para adicionar um item à lista
+    function addItem(event) {
+      event.preventDefault();
+
+      const itemInput = document.getElementById("item-input");
+      const itemValue = document.getElementById("item-value");
+
+      const item = {
+        name: itemInput.value,
+        value: parseFloat(itemValue.value),
+        checked: false
+      };
+
+      itemList.push(item);
+      renderList();
+
+      itemInput.value = "";
+      itemValue.value = "";
+    }
+
+    // Função para remover um item da lista
+    function removeItem(index) {
+      itemList.splice(index, 1);
+      renderList();
+    }
+
+    // Função para marcar/desmarcar um item como comprado
+    function toggleChecked(index) {
+      itemList[index].checked = !itemList[index].checked;
+      renderList();
+    }
+
+    // Função para renderizar a lista de itens
+    function renderList() {
+      const itemListElement = document.getElementById("item-list");
+      const totalValueElement = document.getElementById("total-value");
+      itemListElement.innerHTML = "";
+      let totalValue = 0;
+
+      for (let i = 0; i < itemList.length; i++) {
+        const item = itemList[i];
+        const listItem = document.createElement("li");
+
+        const itemName = document.createElement("span");
+        itemName.innerText = item.name;
+
+        const itemValue = document.createElement("span");
+        itemValue.innerText = "R$" + item.value.toFixed(2);
+
+        const removeButton = document.createElement("button");
+        removeButton.innerText = "-";
+        removeButton.addEventListener("click", () => removeItem(i));
+
+        const toggleButton = document.createElement("button");
+        toggleButton.innerText = item.checked ? "✓" : "+";
+        toggleButton.addEventListener("click", () => toggleChecked(i));
+
+        listItem.appendChild(itemName);
+        listItem.appendChild(itemValue);
+        listItem.appendChild(removeButton);
+        listItem.appendChild(toggleButton);
+
+        if (item.checked) {
+          listItem.classList.add("checked");
+          totalValue += item.value;
+        }
+
+        itemListElement.appendChild(listItem);
+      }
+
+      totalValueElement.innerText = totalValue.toFixed(2);
+    }
+
+    // Adicionar evento de submit ao formulário
+    const itemForm = document.getElementById("item-form");
+    itemForm.addEventListener("submit", addItem);
+  </script>
+</body>
+</html>
